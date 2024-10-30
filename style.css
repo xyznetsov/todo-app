@@ -96,3 +96,7 @@ ul li span {
 ul li span:hover {
     background: #edeef0;
 }
+.line {
+    display: flex;
+    justify-content: space-between;
+}

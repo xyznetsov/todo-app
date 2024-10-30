@@ -1,0 +1,15 @@
+.clock{
+    font-size: 20px;
+    color: #ff5945;
+    text-shadow: rgba(228, 105, 84, 0.514);
+}
+
+.session{
+    font-size: 30px;
+    margin-left:10px ;
+}
+#twodots {
+    position: relative;
+    font-weight: bold;
+    top: -2px;
+}

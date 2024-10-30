@@ -1,6 +1,10 @@
 const inputBox = document.getElementById("input-box");
 const listContainer = document.getElementById("list-container");
 
+document.addEventListener('DOMContentLoaded', function() {
+    inputBox.focus();
+});
+
 function addTask(){
     if(inputBox.value === ''){
         alert("You must write something!");
@@ -40,3 +44,25 @@ inputBox.addEventListener('keydown', function(event) {
     }
     });
 showTask();
+
+// clock
+function updateClock(){ 
+    const now  =  new Date(); 
+    let hours = now.getHours();
+    let minutes = now.getMinutes();
+    let seconds = now.getSeconds();
+    let session = hours >= 12 ? "PM" : "AM" ;
+
+
+    hours = hours % 12 ; 
+    hours = hours ? hours : 12 ;
+
+    document.getElementById("hours").textContent = hours.toString().padStart(2 , '0');
+    document.getElementById("minutes").textContent = minutes.toString().padStart(2 , '0');
+    document.getElementById("secondes").textContent = seconds.toString().padStart(2 , '0');
+    document.getElementById("session").textContent = session;
+
+}    
+
+setInterval(updateClock , 1000); 
+updateClock();
