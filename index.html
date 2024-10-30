@@ -4,12 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="clock.css">
     <title>to-do-app</title>
 </head>
 <body>
     <div class="container">
         <div class="todo-app">
-            <h2>To-Do List <img src="images/check-list.png" alt=""></h2>
+            <div class="line">
+                <h2>To-Do List <img src="images/check-list.png" alt=""></h2>
+                <div class="clock">
+                    <span id="hours">00</span>
+                    <span id="twodots">:</span>
+                    <span id="minutes">00</span>
+                    <span id="twodots">:</span>
+                    <span id="secondes">00</span>
+                    <span id="session">AM</span>
+                </div>
+            </div>
             <div class="row">
                 <input type="text" id="input-box" placeholder="add your task">
                 <button onclick="addTask()">add</button>

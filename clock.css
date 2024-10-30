@@ -1,0 +1,33 @@
+body { 
+    margin: 0;
+    padding: 0;
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: 'Arial', sans-serif;
+}
+
+
+.clock-container{
+background-color: #2d2d2d;
+padding: 40px;
+border-radius: 10px;
+box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.clock{
+    font-size: 20px;
+    color: #242725;
+    text-shadow: rgba(88, 109, 99, 0.3);
+}
+
+.session{
+    font-size: 30px;
+    margin-left:10px ;
+}
+#twodots {
+    position: relative;
+    top: -2px; /* Измените значение на нужное */
+}
