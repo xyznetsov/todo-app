@@ -34,29 +34,48 @@ function addTask(){
     inputBox.focus(); // Возвращаем фокус на поле ввода
     
     saveData();
+    updateProgress(); // Добавляем обновление прогресса
 }
 
-listContainer.addEventListener("click", function(e){
-    if(e.target.tagName === "LI"){
+listContainer.addEventListener("click", function(e) {
+    if(e.target.tagName === "LI") {
         e.target.classList.toggle("checked");
         saveData();
+        updateProgress();
     }
     else if(e.target.tagName === "SPAN") {
         const li = e.target.parentElement;
-        // Сохраняем текущую высоту элемента
-        const height = li.offsetHeight;
-        li.style.setProperty('--height', height + 'px');
+        const isLastItem = listContainer.querySelectorAll('li').length === 1;
         
-        // Добавляем класс для анимации
         li.classList.add('removing');
         
-        // Удаляем элемент после завершения анимации
-        li.addEventListener('animationend', function(e) {
-            if (e.animationName === 'collapseHeight') {
-                li.remove();
-                saveData();
-            }
-        });
+        if (isLastItem) {
+            const todoApp = document.querySelector('.todo-app');
+            const progressContainer = document.querySelector('.progress-container');
+            
+            li.addEventListener('animationend', function(e) {
+                if (e.animationName === 'collapseHeight') {
+                    li.remove();
+                    listContainer.classList.add('empty');
+                    todoApp.classList.add('empty');
+                    
+                    // Добавляем задержку перед скрытием прогресс-бара
+                    setTimeout(() => {
+                        progressContainer.classList.add('hidden');
+                        saveData();
+                        updateProgress();
+                    }, 200); // Задержка в 200мс
+                }
+            });
+        } else {
+            li.addEventListener('animationend', function(e) {
+                if (e.animationName === 'collapseHeight') {
+                    li.remove();
+                    saveData();
+                    updateProgress();
+                }
+            });
+        }
     }
 }, false);
 
@@ -125,6 +144,7 @@ function showTask() {
             item.style.opacity = '1';
         });
     }
+    updateProgress(); // Добавляем обновление прогресса при загрузке
 }
 
 inputBox.addEventListener('keydown', function(event) {
@@ -201,4 +221,51 @@ function saveData() {
     });
     
     localStorage.setItem("data", listContainer.innerHTML);
+}
+
+// Функция обновления прогресса
+function updateProgress() {
+    const totalTasks = listContainer.querySelectorAll('li').length;
+    const completedTasks = listContainer.querySelectorAll('li.checked').length;
+    const progressPercent = totalTasks === 0 ? 0 : (completedTasks / totalTasks) * 100;
+    
+    const progressContainer = document.querySelector('.progress-container');
+    const todoApp = document.querySelector('.todo-app');
+    
+    // Обновляем классы для пустого состояния
+    if (totalTasks === 0) {
+        progressContainer.classList.add('hidden');
+        listContainer.classList.add('empty');
+        todoApp.classList.add('empty');
+    } else {
+        progressContainer.classList.remove('hidden');
+        listContainer.classList.remove('empty');
+        todoApp.classList.remove('empty');
+    }
+    
+    // Обновляем статистику
+    document.getElementById('tasks-completed').textContent = completedTasks;
+    document.getElementById('tasks-total').textContent = totalTasks;
+    
+    const progressFill = document.querySelector('.progress-fill');
+    
+    // Определяем цвет
+    let progressColor;
+    if (totalTasks === 0) {
+        progressColor = '#888';
+    } else if (progressPercent === 100) {
+        progressColor = '#2ecc71';
+    } else if (progressPercent >= 75) {
+        progressColor = '#3498db';
+    } else if (progressPercent >= 50) {
+        progressColor = '#f1c40f';
+    } else if (progressPercent >= 25) {
+        progressColor = '#e67e22';
+    } else {
+        progressColor = '#e74c3c';
+    }
+
+    // Обновляем прогресс-бар
+    progressFill.style.width = `${progressPercent}%`;
+    progressFill.style.backgroundColor = progressColor;
 }

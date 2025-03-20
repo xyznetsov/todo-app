@@ -25,10 +25,15 @@
     max-width: 540px;
     background: var(--white);
     margin: 100px auto 20px;
-    padding: 40px 30px 70px;
+    padding: 40px 30px 0;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    transition: transform 0.3s ease, padding 0.4s ease-in-out;
+    transition: transform 0.3s ease, padding 0.4s ease-in-out, padding-bottom 0.3s ease;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-bottom: 100px;
 }
 .todo-app:hover {
     transform: translateY(-5px);
@@ -261,17 +266,18 @@ ul li:not(.dragging):hover::after {
         height: var(--height);
         margin-bottom: 5px;
         padding: 18px 8px 12px 50px;
+        opacity: 1;
     }
     100% {
         height: 0;
         margin-bottom: 0;
         padding: 0 8px 0 50px;
+        opacity: 0;
     }
 }
 
 ul li.removing {
-    animation: fadeOut 0.3s ease forwards,
-               collapseHeight 0.4s ease-in-out 0.2s forwards;
+    animation: collapseHeight 0.4s ease forwards;
     pointer-events: none;
 }
 
@@ -302,4 +308,100 @@ ul li.removing {
 ul li.adding {
     animation: slideIn 0.4s ease forwards;
     overflow: hidden; /* Скрываем возможные артефакты */
+}
+
+#list-container {
+    margin-bottom: 20px;
+    min-height: 30px;
+    transition: all 0.3s ease;
+}
+
+/* Стиль для пустого списка */
+#list-container.empty {
+    min-height: 0;
+    margin-bottom: 0;
+}
+
+.progress-container {
+    margin: 0 -30px;
+    padding: 15px 30px;
+    background: var(--bg-light);
+    border-radius: 0 0 10px 10px;
+    transition: all 0.3s ease 0.2s; /* Добавляем задержку для появления/исчезновения */
+    max-height: 100px;
+    opacity: 1;
+    overflow: hidden;
+}
+
+/* Стили для скрытого состояния */
+.progress-container.hidden {
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    opacity: 0;
+}
+
+.progress-stats {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.progress-bar {
+    height: 8px;
+    background: var(--bg-light);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 4px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+    position: relative;
+}
+
+/* Добавляем эффект блеска */
+.progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.2) 0%,
+        rgba(255, 255, 255, 0) 100%
+    );
+}
+
+/* Добавим анимацию при изменении прогресса */
+@keyframes progressPulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.progress-fill.updating {
+    animation: progressPulse 0.3s ease;
+}
+
+/* Когда список пустой */
+.progress-container.empty-list {
+    margin-top: 20px;
+}
+
+/* Уменьшаем padding когда список пустой */
+.todo-app.empty {
+    padding-bottom: 0;
 }
