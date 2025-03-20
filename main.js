@@ -6,37 +6,111 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function addTask(){
-    if(inputBox.value === ''){
+    if(inputBox.value.trim() === ''){
         alert("You must write something!");
+        return;
     }
-    else{
-        let li = document.createElement("li");
-        li.innerHTML = inputBox.value;
-        listContainer.appendChild(li);
-        let span = document.createElement("span");
-        span.innerHTML = "\u00d7";
-        li.appendChild(span);
-    }
+    
+    const li = document.createElement("li");
+    li.innerHTML = inputBox.value;
+    listContainer.appendChild(li);
+    
+    const span = document.createElement("span");
+    span.innerHTML = "\u00d7";
+    li.appendChild(span);
+    
+    li.style.opacity = '0';
+    requestAnimationFrame(() => {
+        li.style.transition = 'opacity 0.3s ease';
+        li.style.opacity = '1';
+    });
+    
     inputBox.value = '';
     saveData();
 }
 listContainer.addEventListener("click", function(e){
     if(e.target.tagName === "LI"){
-        e.target.classList.toggle("checked");  // если кликнули на li, то поставиться чекбокс
-        saveData();
+        if (!e.target.classList.contains('editing')) {
+            const isSpanClick = e.target.querySelector('span').contains(e.target);
+            if (!isSpanClick) {
+                e.target.classList.toggle("checked");
+                saveData();
+            }
+        }
     }
     else if(e.target.tagName === "SPAN") {
-        e.target.parentElement.remove(); // если кликнули на span(крестик), то элемент удалится
+        e.target.parentElement.remove();
         saveData();
     }
 }, false);
+
+listContainer.addEventListener("dblclick", function(e) {
+    if(e.target.tagName === "LI") {
+        const li = e.target;
+        const span = li.querySelector('span');
+        const text = li.childNodes[0].textContent;
+        
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = text;
+        input.className = "edit-input";
+        
+        li.dataset.originalText = text;
+        
+        li.textContent = '';
+        li.appendChild(input);
+        li.appendChild(span);
+        li.classList.add('editing');
+        
+        input.focus();
+        
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                saveEdit(li, input);
+            } else if (event.key === 'Escape') {
+                cancelEdit(li);
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            saveEdit(li, input);
+        });
+    }
+});
+
+function saveEdit(li, input) {
+    const newText = input.value.trim();
+    if (newText) {
+        const span = li.querySelector('span');
+        li.textContent = newText;
+        li.appendChild(span);
+    } else {
+        cancelEdit(li);
+    }
+    li.classList.remove('editing');
+    saveData();
+}
+
+function cancelEdit(li) {
+    const span = li.querySelector('span');
+    li.textContent = li.dataset.originalText;
+    li.appendChild(span);
+    li.classList.remove('editing');
+}
 
 function saveData() {
     localStorage.setItem("data", listContainer.innerHTML);
 }
 
 function showTask() {
-    listContainer.innerHTML = localStorage.getItem("data");
+    const savedData = localStorage.getItem("data");
+    if (savedData) {
+        listContainer.innerHTML = savedData;
+        const items = listContainer.getElementsByTagName('li');
+        Array.from(items).forEach(item => {
+            item.style.opacity = '1';
+        });
+    }
 }
 inputBox.addEventListener('keydown', function(event) {
     if(event.key === 'Enter') {
