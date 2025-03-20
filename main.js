@@ -30,7 +30,9 @@ function addTask(){
         }
     });
     
-    inputBox.value = '';
+    inputBox.value = ''; // Очищаем поле ввода
+    inputBox.focus(); // Возвращаем фокус на поле ввода
+    
     saveData();
 }
 
@@ -134,20 +136,29 @@ inputBox.addEventListener('keydown', function(event) {
 showTask();
 
 // clock
-function updateClock(){ 
-    const now = new Date(); 
+function updateDateTime() {
+    const now = new Date();
+    
+    // Обновляем время
     let hours = now.getHours();
     let minutes = now.getMinutes();
     let seconds = now.getSeconds();
 
-    // Форматируем часы, минуты и секунды с ведущими нулями
     document.getElementById("hours").textContent = hours.toString().padStart(2, '0');
     document.getElementById("minutes").textContent = minutes.toString().padStart(2, '0');
     document.getElementById("secondes").textContent = seconds.toString().padStart(2, '0');
-}    
+    
+    // Обновляем дату
+    const options = { 
+        day: 'numeric', 
+        month: 'long'
+    };
+    const dateStr = now.toLocaleDateString('ru-RU', options);
+    document.getElementById("current-date").textContent = dateStr;
+}
 
-setInterval(updateClock , 1000); 
-updateClock();
+setInterval(updateDateTime, 1000);
+updateDateTime();
 
 // Восстанавливаем обработчики drag and drop
 listContainer.addEventListener('dragstart', (e) => {

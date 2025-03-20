@@ -167,21 +167,23 @@ ul li.editing::before {
 }
 
 .clock-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     background: var(--bg-light);
     padding: 10px 20px;
     border-radius: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
+}
+
+.date {
+    font-size: 14px;
+    color: var(--accent-color);
+    margin-top: 5px;
+    font-weight: 500;
 }
 
 .clock {
-    font-family: 'Poppins', sans-serif;
-    font-size: 20px;
-    color: var(--text-primary);
-    display: flex;
-    align-items: center;
-    gap: 2px;
+    margin-bottom: 2px;
 }
 
 #hours, #minutes, #secondes {
